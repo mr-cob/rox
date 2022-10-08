@@ -1,34 +1,35 @@
 # Fetures
 
-**Lexical Analyser**
-The *Lexical Analizer* supported these *Tokens* bellow:
+## Lexical Analyser
 
-    - Delimiters:
-        - `(`
-        - `)`
-        - `{`
-        - `}`
-        - `,`
-        - `;`
-        - `.`
+**The *Lexical Analizer* supported these *Tokens* bellow:**
 
-    - Arithmetic Operators: 
-        - `+` 
-        - `-` 
-        - `*` 
-        - `/` 
-    
-    - Logical Operators: 
-        - `!`
-        - `!=`
-        - `=`
-        - `==`
-        - `<` 
-        - `<=` 
-        - `>`
-        - `>=`
+- **Delimiters:**
+- `(`
+- `)`
+- `{`
+- `}`
+- `,`
+- `;`
+- `.`
 
-    - General:
-        - `//`
+- **Arithmetic Operators:**
+- `+`
+- `-`
+- `*`
+- `/`
 
-    - If tokens does not match any of above, then that recognized as `Invalid Token`
+- **Locgial Operators:**
+- `!`
+- `!=`
+- `=`
+- `==`
+- `<`
+- `<=`
+- `>`
+- `>=`
+
+- **General:**
+- `//`
+
+- **If tokens does not match any of above, then that recognized as `Invalid Token`**
