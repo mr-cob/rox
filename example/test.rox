@@ -2,5 +2,5 @@
 (+ != *) {
     >>=<<=;
 } (- == /) {
-    .,
+    "a string literal"."another string literal,
 }

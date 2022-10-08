@@ -40,6 +40,12 @@
 
 ---
 
+- **Literals:**
+
+  - `String`
+
+---
+
 - **Ignores:**
 
   - `//`

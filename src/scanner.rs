@@ -91,6 +91,7 @@ impl Scanner {
                     self.add_token_without_literal(TokenType::Greater);
                 }
             }
+            '"' => self.make_string(),
             _ => self.add_token_without_literal(TokenType::Invalid),
         }
     }
@@ -117,6 +118,29 @@ impl Scanner {
 
         self.current += 1;
         return true;
+    }
+
+    fn make_string(&mut self) {
+        while self.peek() != '"' && !self.is_eof() {
+            if self.peek() == '\n' {
+                self.line += 1;
+            }
+            self.advance();
+        }
+
+        if self.is_eof() {
+            self.add_token_without_literal(TokenType::Invalid);
+            return;
+        }
+
+        self.advance(); // covering up the ending qoute
+
+        self.add_token(
+            TokenType::String,
+            Option::Some(Literal::String(
+                self.source[self.start + 1..self.current - 1].to_string(),
+            )),
+        );
     }
 
     fn add_token_without_literal(&mut self, token_type: TokenType) {
