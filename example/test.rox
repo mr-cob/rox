@@ -1,6 +1,5 @@
-// this is a comment
-(+ != *) {
-    >>=<<=;
-} (- == /) {
-    "a string literal".100.199,
-}
+name = "utsho";
+age = 19.7;
+(age >= 18) {
+    
+} 

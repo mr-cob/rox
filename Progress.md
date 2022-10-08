@@ -47,6 +47,13 @@
 
 ---
 
+- **Generals:**
+
+  - `Identifier`
+  - `EOF`
+
+---
+
 - **Ignores:**
 
   - `//`

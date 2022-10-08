@@ -100,6 +100,8 @@ impl Scanner {
             _ => {
                 if self.is_digit(current_charecter) {
                     self.make_number();
+                } else if self.is_alpha(current_charecter) {
+                    self.make_identifier();
                 } else {
                     self.add_error("Unexpected Token");
                     self.add_token_without_literal(TokenType::Invalid);
@@ -141,6 +143,23 @@ impl Scanner {
 
     fn is_digit(&self, charecter: char) -> bool {
         charecter >= '0' && charecter <= '9'
+    }
+
+    fn is_alpha(&self, charecter: char) -> bool {
+        charecter >= 'a' && charecter <= 'z'
+            || charecter >= 'A' && charecter <= 'Z'
+            || charecter == '_'
+    }
+
+    fn is_alpha_numeric(&self, charecter: char) -> bool {
+        self.is_alpha(charecter) || self.is_digit(charecter)
+    }
+
+    fn make_identifier(&mut self) {
+        while self.is_alpha_numeric(self.peek()) {
+            self.advance();
+        }
+        self.add_token_without_literal(TokenType::Identifier);
     }
 
     fn make_number(&mut self) {
