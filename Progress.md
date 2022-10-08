@@ -46,4 +46,4 @@
 
 ---
 
-- **If tokens does not match any of above, then that recognized as Invalid Token.**
+- **If token does not match any of above, then that recognized as Invalid Token.**
