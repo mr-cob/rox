@@ -2,7 +2,7 @@
 
 ## Lexical Analyser
 
-**The Lexical Analizer supports these Tokens bellow:**
+**The Lexical Analizer supports Tokens bellow.**
 
 ---
 
@@ -46,4 +46,4 @@
 
 ---
 
-- **If tokens does not match any of above, then that recognized as Invalid Token**
+- **If tokens does not match any of above, then that recognized as Invalid Token.**
