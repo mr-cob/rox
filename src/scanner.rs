@@ -42,6 +42,8 @@ impl Scanner {
     fn scan_token(&mut self) {
         let current = self.advance();
         match current {
+            ' ' | '\r' | '\t' => return,
+            '\n' => self.line += 1,
             '(' => self.add_token_without_literal(TokenType::LeftParen),
             ')' => self.add_token_without_literal(TokenType::RightParen),
             '{' => self.add_token_without_literal(TokenType::LeftBrace),
