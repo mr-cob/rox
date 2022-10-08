@@ -2,7 +2,7 @@
 
 ## Lexical Analyser
 
-**The *Lexical Analizer* supported these *Tokens* bellow:**
+**The `Lexical Analizer` supports these `Tokens` bellow:**
 
 - **Delimiters:**
 - `(`
