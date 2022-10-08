@@ -1,4 +1,5 @@
 use crate::{
+    errors::Error,
     token::{Literal, Token},
     token_type::TokenType,
 };
@@ -10,6 +11,8 @@ pub struct Scanner {
     start: usize,
     current: usize,
     line: usize,
+
+    pub errors: Vec<Error>,
 }
 
 impl Scanner {
@@ -17,10 +20,11 @@ impl Scanner {
         Scanner {
             source: source.to_string(),
             source_as_bytes: source.as_bytes().to_vec(),
-            tokens: Vec::new(),
+            errors: Vec::new(),
             start: 0,
             current: 0,
             line: 1,
+            tokens: Vec::new(),
         }
     }
 
@@ -44,6 +48,7 @@ impl Scanner {
         match current {
             ' ' | '\r' | '\t' => return,
             '\n' => self.line += 1,
+            '\0' => self.add_token_without_literal(TokenType::EOF),
             '(' => self.add_token_without_literal(TokenType::LeftParen),
             ')' => self.add_token_without_literal(TokenType::RightParen),
             '{' => self.add_token_without_literal(TokenType::LeftBrace),
@@ -92,7 +97,10 @@ impl Scanner {
                 }
             }
             '"' => self.make_string(),
-            _ => self.add_token_without_literal(TokenType::Invalid),
+            _ => {
+                self.add_error("Unexpected charecter");
+                self.add_token_without_literal(TokenType::Invalid);
+            }
         }
     }
 
@@ -129,6 +137,7 @@ impl Scanner {
         }
 
         if self.is_eof() {
+            self.add_error("Unterminated String");
             self.add_token_without_literal(TokenType::Invalid);
             return;
         }
@@ -152,7 +161,11 @@ impl Scanner {
             token_type,
             self.source[self.start..self.current].to_string(),
             literal,
-            self.line,
+            self.line - 1,
         ));
+    }
+
+    fn add_error(&mut self, message: &str) {
+        self.errors.push(Error::new(self.line - 1, message));
     }
 }

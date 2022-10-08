@@ -3,7 +3,7 @@ use std::{
     io::{stdin, stdout, Write},
 };
 
-use crate::{scanner::Scanner, token_type::TokenType};
+use crate::scanner::Scanner;
 
 pub struct Rox {
     had_error: bool,
@@ -41,26 +41,21 @@ impl Rox {
             std::process::exit(65)
         };
     }
-
-    pub fn error(&mut self, line: usize, message: &str) {
-        self.report(line, "", message);
-    }
 }
 
 impl Rox {
     fn run(&mut self, source: &str) {
         let mut scanner = Scanner::new(source);
-        for token in scanner.scan_tokens() {
-            if token.token_type == TokenType::Invalid {
-                self.error(token.line, "Unexpected Token");
-                self.had_error = true;
-            }
+        let tokens = scanner.scan_tokens();
+        for token in tokens {
             token.print();
         }
-    }
-
-    fn report(&mut self, line: usize, plece: &str, message: &str) {
-        eprintln!("[line {}] Error {}: {}", line, plece, message);
-        self.had_error = true;
+        let errors = scanner.errors;
+        if errors.len() > 0 {
+            self.had_error = true;
+            for error in errors {
+                error.print();
+            }
+        }
     }
 }

@@ -31,7 +31,7 @@ impl Token {
 
     pub fn print(&self) {
         println!(
-            "type {:#?}, lexeme {}, literal {:#?}",
+            "type {:#?}, lexeme {}, literal {:#?}.",
             self.token_type, self.lexeme, self.literal
         )
     }

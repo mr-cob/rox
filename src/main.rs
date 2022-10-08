@@ -2,6 +2,7 @@ use std::env::args;
 
 use rox::Rox;
 
+mod errors;
 mod rox;
 mod scanner;
 mod token;
