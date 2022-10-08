@@ -1,3 +1,3 @@
 # ROX
 
-***an interpreter written in rust***
+**An interpreter written in Rust**
