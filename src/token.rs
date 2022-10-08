@@ -4,7 +4,7 @@ use crate::token_type::TokenType;
 pub enum Literal {
     String(String),
     Identifier(String),
-    Number(usize),
+    Number(f64),
 }
 
 pub struct Token {

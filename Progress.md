@@ -43,6 +43,7 @@
 - **Literals:**
 
   - `String`
+  - `Number (f64)`
 
 ---
 

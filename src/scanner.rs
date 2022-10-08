@@ -44,8 +44,8 @@ impl Scanner {
     }
 
     fn scan_token(&mut self) {
-        let current = self.advance();
-        match current {
+        let current_charecter = self.advance();
+        match current_charecter {
             ' ' | '\r' | '\t' => return,
             '\n' => self.line += 1,
             '\0' => self.add_token_without_literal(TokenType::EOF),
@@ -98,8 +98,12 @@ impl Scanner {
             }
             '"' => self.make_string(),
             _ => {
-                self.add_error("Unexpected charecter");
-                self.add_token_without_literal(TokenType::Invalid);
+                if self.is_digit(current_charecter) {
+                    self.make_number();
+                } else {
+                    self.add_error("Unexpected Token");
+                    self.add_token_without_literal(TokenType::Invalid);
+                }
             }
         }
     }
@@ -116,6 +120,13 @@ impl Scanner {
         return self.source_as_bytes[self.current] as char;
     }
 
+    fn peek_next(&self) -> char {
+        if self.current + 1 >= self.source.len() {
+            return '\0';
+        }
+        return self.source_as_bytes[self.current + 1] as char;
+    }
+
     fn match_next(&mut self, expected: char) -> bool {
         if self.is_eof() {
             return false;
@@ -126,6 +137,24 @@ impl Scanner {
 
         self.current += 1;
         return true;
+    }
+
+    fn is_digit(&self, charecter: char) -> bool {
+        charecter >= '0' && charecter <= '9'
+    }
+
+    fn make_number(&mut self) {
+        while self.is_digit(self.peek()) {
+            self.advance();
+        }
+        if self.peek() == '.' && self.is_digit(self.peek_next()) {
+            self.advance(); // consuming the dot
+            while self.is_digit(self.peek()) {
+                self.advance();
+            }
+        }
+        let literal: f64 = self.source[self.start..self.current].parse().unwrap();
+        self.add_token(TokenType::Number, Option::Some(Literal::Number(literal)));
     }
 
     fn make_string(&mut self) {
