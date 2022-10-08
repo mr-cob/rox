@@ -1,5 +1,10 @@
-name = "utsho";
-age = 19.7;
-(age >= 18) {
-    
-} 
+// sample program
+
+var name = "utsho";
+var age = 19.7;
+
+if (age >= 18) {
+    print "you are an adult", name;
+} else {
+    print "your are not an adult", name;
+}

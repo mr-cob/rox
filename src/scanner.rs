@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     errors::Error,
     token::{Literal, Token},
@@ -11,7 +13,7 @@ pub struct Scanner {
     start: usize,
     current: usize,
     line: usize,
-
+    keywords: HashMap<String, TokenType>,
     pub errors: Vec<Error>,
 }
 
@@ -24,11 +26,13 @@ impl Scanner {
             start: 0,
             current: 0,
             line: 1,
+            keywords: HashMap::new(),
             tokens: Vec::new(),
         }
     }
 
     pub fn scan_tokens(&mut self) -> &Vec<Token> {
+        self.init_keywords();
         while !self.is_eof() {
             self.scan_token();
             self.start = self.current;
@@ -48,7 +52,6 @@ impl Scanner {
         match current_charecter {
             ' ' | '\r' | '\t' => return,
             '\n' => self.line += 1,
-            '\0' => self.add_token_without_literal(TokenType::EOF),
             '(' => self.add_token_without_literal(TokenType::LeftParen),
             ')' => self.add_token_without_literal(TokenType::RightParen),
             '{' => self.add_token_without_literal(TokenType::LeftBrace),
@@ -159,6 +162,10 @@ impl Scanner {
         while self.is_alpha_numeric(self.peek()) {
             self.advance();
         }
+        let identifier = self.source[self.start..self.current].to_string();
+        if let Some(_) = self.keywords.get(&identifier) {
+            return;
+        };
         self.add_token_without_literal(TokenType::Identifier);
     }
 
@@ -215,5 +222,30 @@ impl Scanner {
 
     fn add_error(&mut self, message: &str) {
         self.errors.push(Error::new(self.line - 1, message));
+    }
+
+    fn init_keywords(&mut self) {
+        self.keywords.insert(String::from("and"), TokenType::And);
+        self.keywords
+            .insert(String::from("class"), TokenType::Class);
+        self.keywords.insert(String::from("else"), TokenType::Else);
+        self.keywords
+            .insert(String::from("false"), TokenType::False);
+        self.keywords.insert(String::from("for"), TokenType::For);
+        self.keywords.insert(String::from("fun"), TokenType::Fun);
+        self.keywords.insert(String::from("nil"), TokenType::Nil);
+        self.keywords.insert(String::from("if"), TokenType::If);
+        self.keywords.insert(String::from("or"), TokenType::Or);
+        self.keywords
+            .insert(String::from("print"), TokenType::Print);
+        self.keywords
+            .insert(String::from("return"), TokenType::Return);
+        self.keywords
+            .insert(String::from("super"), TokenType::Super);
+        self.keywords.insert(String::from("this"), TokenType::This);
+        self.keywords.insert(String::from("true"), TokenType::True);
+        self.keywords.insert(String::from("var"), TokenType::Var);
+        self.keywords
+            .insert(String::from("while"), TokenType::While);
     }
 }

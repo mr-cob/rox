@@ -50,7 +50,6 @@
 - **Generals:**
 
   - `Identifier`
-  - `EOF`
 
 ---
 
@@ -61,6 +60,7 @@
   - `\t`
   - `\r`
   - `\n`
+  - `Keywords`
 
 ---
 

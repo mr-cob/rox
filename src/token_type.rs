@@ -43,5 +43,4 @@ pub enum TokenType {
     While,
 
     Invalid,
-    EOF,
 }
