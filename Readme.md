@@ -10,10 +10,10 @@ After that you can build it with `cargo build --release`.
 
 **Commands:**
 
-```
-    apt install rust
-    apt install git
-    git clone https:\\github.com\mr-cob\rox.git
-    cd rox
-    cargo build --release
+``` 
+apt install rust 
+apt install git 
+git clone https:\\github.com\mr-cob\rox.git 
+cd rox 
+cargo build --release 
 ```
