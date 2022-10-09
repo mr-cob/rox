@@ -64,9 +64,9 @@ impl Scanner {
             '*' => self.add_token_without_literal(TokenType::Star),
             '/' => {
                 if self.match_next('/') {
-                    while self.peek() != '\n' && !self.is_eof() {
-                        self.advance();
-                    }
+                    self.comment();
+                } else if self.match_next('*') {
+                    self.multiline_comment();
                 } else {
                     self.add_token_without_literal(TokenType::Slash);
                 }
@@ -158,6 +158,32 @@ impl Scanner {
         self.is_alpha(charecter) || self.is_digit(charecter)
     }
 
+    fn comment(&mut self) {
+        while self.peek() != '\n' && !self.is_eof() {
+            self.advance();
+        }
+    }
+
+    fn multiline_comment(&mut self) {
+        self.advance();
+        while !self.is_eof() && self.peek() != '*' && self.peek_next() != '/' {
+            if self.peek() == '\n' {
+                self.line += 1;
+            }
+            self.advance();
+        }
+        if self.is_eof() {
+            self.add_error("Unterminated Comment");
+            self.add_token_without_literal(TokenType::Invalid);
+            return;
+        }
+        if self.peek() == '*' && self.peek_next() == '/' {
+            self.advance();
+            self.advance();
+            return;
+        }
+    }
+
     fn make_identifier(&mut self) {
         while self.is_alpha_numeric(self.peek()) {
             self.advance();
@@ -216,12 +242,12 @@ impl Scanner {
             token_type,
             self.source[self.start..self.current].to_string(),
             literal,
-            self.line - 1,
+            self.line,
         ));
     }
 
     fn add_error(&mut self, message: &str) {
-        self.errors.push(Error::new(self.line - 1, message));
+        self.errors.push(Error::new(self.line, message));
     }
 
     fn init_keywords(&mut self) {

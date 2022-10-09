@@ -56,6 +56,7 @@
 - **Ignores:**
 
   - `//`
+  - `/**/ (can not contain / or *`
   - ` `
   - `\t`
   - `\r`
