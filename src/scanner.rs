@@ -43,10 +43,6 @@ impl Scanner {
 }
 
 impl Scanner {
-    fn is_eof(&self) -> bool {
-        self.current >= self.source.len()
-    }
-
     fn scan_token(&mut self) {
         let current_charecter = self.advance();
         match current_charecter {
@@ -63,37 +59,37 @@ impl Scanner {
             '-' => self.add_token_without_literal(TokenType::Minus),
             '*' => self.add_token_without_literal(TokenType::Star),
             '/' => {
-                if self.match_next('/') {
+                if self.is_match('/') {
                     self.comment();
-                } else if self.match_next('*') {
+                } else if self.is_match('*') {
                     self.multiline_comment();
                 } else {
                     self.add_token_without_literal(TokenType::Slash);
                 }
             }
             '!' => {
-                if self.match_next('=') {
+                if self.is_match('=') {
                     self.add_token_without_literal(TokenType::BangEqual);
                 } else {
                     self.add_token_without_literal(TokenType::Bang);
                 }
             }
             '=' => {
-                if self.match_next('=') {
+                if self.is_match('=') {
                     self.add_token_without_literal(TokenType::EqualEqual);
                 } else {
                     self.add_token_without_literal(TokenType::Equal);
                 }
             }
             '<' => {
-                if self.match_next('=') {
+                if self.is_match('=') {
                     self.add_token_without_literal(TokenType::LessEqual);
                 } else {
                     self.add_token_without_literal(TokenType::Less);
                 }
             }
             '>' => {
-                if self.match_next('=') {
+                if self.is_match('=') {
                     self.add_token_without_literal(TokenType::GreaterEqual);
                 } else {
                     self.add_token_without_literal(TokenType::Greater);
@@ -111,6 +107,10 @@ impl Scanner {
                 }
             }
         }
+    }
+
+    fn is_eof(&self) -> bool {
+        self.current >= self.source.len()
     }
 
     fn advance(&mut self) -> char {
@@ -132,7 +132,7 @@ impl Scanner {
         return self.source_as_bytes[self.current + 1] as char;
     }
 
-    fn match_next(&mut self, expected: char) -> bool {
+    fn is_match(&mut self, expected: char) -> bool {
         if self.is_eof() {
             return false;
         };
@@ -165,22 +165,33 @@ impl Scanner {
     }
 
     fn multiline_comment(&mut self) {
-        self.advance();
-        while !self.is_eof() && self.peek() != '*' && self.peek_next() != '/' {
-            if self.peek() == '\n' {
-                self.line += 1;
+        loop {
+            if self.is_eof() {
+                self.add_error("Unterminated comment");
+                self.add_token_without_literal(TokenType::Invalid);
+                return;
             }
-            self.advance();
-        }
-        if self.is_eof() {
-            self.add_error("Unterminated Comment");
-            self.add_token_without_literal(TokenType::Invalid);
-            return;
-        }
-        if self.peek() == '*' && self.peek_next() == '/' {
-            self.advance();
-            self.advance();
-            return;
+            match self.peek() {
+                '*' => {
+                    self.advance();
+                    if self.is_match('/') {
+                        return;
+                    }
+                }
+                '/' => {
+                    self.advance();
+                    if self.is_match('*') {
+                        self.multiline_comment();
+                    }
+                }
+                '\n' => {
+                    self.advance();
+                    self.line += 1;
+                }
+                _ => {
+                    self.advance();
+                }
+            }
         }
     }
 

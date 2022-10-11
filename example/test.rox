@@ -1,6 +1,6 @@
 /* 
 multiline comment
-can't include asterisk or slash
+can include * or / and /* nested comment */
 */
 
 var name = "utsho";

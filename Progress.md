@@ -56,7 +56,7 @@
 - **Ignores:**
 
   - `//`
-  - `/**/ (can not contain / or *`
+  - `/* {..comments..} */`
   - ` `
   - `\t`
   - `\r`
